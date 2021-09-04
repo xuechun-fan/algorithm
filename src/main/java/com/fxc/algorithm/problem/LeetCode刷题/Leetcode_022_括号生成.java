@@ -4,6 +4,10 @@ package com.fxc.algorithm.problem.LeetCode刷题;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author chun
+ * @date
+ */
 class Leetcode_022_括号生成 {
     public List<String> generateParenthesis(int n) {
         List<String> res = new ArrayList<>();
@@ -13,6 +17,10 @@ class Leetcode_022_括号生成 {
 
     /**
      * 暴力递归法，将所有的可能都生成然后判断是否有效，此版本还可以剪枝优化
+     *
+     * @param arr 数组
+     * @param pos 下标
+     * @param res 结果
      */
     private void dfs(char[] arr, int pos, List<String> res) {
         if (pos == arr.length) {
@@ -30,9 +38,14 @@ class Leetcode_022_括号生成 {
     private boolean isValid(char[] arr) {
         int balance = 0;
         for (char c : arr) {
-            if (c == '(') balance++;
-            else balance--;
-            if (balance < 0) return false;
+            if (c == '(') {
+                balance++;
+            } else {
+                balance--;
+            }
+            if (balance < 0) {
+                return false;
+            }
         }
         return balance == 0;
     }

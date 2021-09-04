@@ -2,16 +2,17 @@ package com.fxc.algorithm.problem.LeetCode刷题;
 
 /**
  * 最长回文子串
+ *
  * @author chun
  */
 public class Leetcode_005_最长回文子串 {
     /**
      * 方法1：动态规划法
      *
-     * @param s
-     * @return
+     * @param s 输入字符串
+     * @return 最长回文子串长度
      */
-    public static String longestPalindromeDP(String s) {
+    public static String longestPalindromeDp(String s) {
         if (s == null || s.length() == 0) {
             return null;
         }
@@ -44,8 +45,8 @@ public class Leetcode_005_最长回文子串 {
     /**
      * 方法2：中心扩展法
      *
-     * @param s
-     * @return
+     * @param s 输入字符串
+     * @return 最长回文子串长度
      */
     public static String longestPalindrome(String s) {
         if (s == null || s.length() == 0) {

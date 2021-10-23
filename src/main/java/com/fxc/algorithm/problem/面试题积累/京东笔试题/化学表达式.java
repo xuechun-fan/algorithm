@@ -16,7 +16,9 @@ public class 化学表达式 {
     }
 
     private static int weight(String s) {
-        if (s == null || s.length() == 0) return 0;
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
         HashMap<Character, Integer> dic = new HashMap<>();
         dic.put('C', 12);
         dic.put('H', 1);

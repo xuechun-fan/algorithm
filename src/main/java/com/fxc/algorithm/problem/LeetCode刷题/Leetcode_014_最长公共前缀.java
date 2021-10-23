@@ -3,8 +3,10 @@ package com.fxc.algorithm.problem.LeetCode刷题;
 
 /**
  * 最长公共前缀
+ *
+ * @author FXC
  */
-public class Solution_014 {
+public class Leetcode_014_最长公共前缀 {
     public static String longestCommonPrefix(String[] strs) {
         if (strs == null || strs.length == 0) {
             return "";
@@ -12,7 +14,8 @@ public class Solution_014 {
         String ans = strs[0];
         for (int i = 1; i < strs.length; i++) {
             int end = 0;
-            while (end < Math.min(ans.length(), strs[i].length()) && ans.charAt(end) == strs[i].charAt(end)) {
+            while (end < Math.min(ans.length(), strs[i].length()) && ans.charAt(
+                    end) == strs[i].charAt(end)) {
                 end++;
             }
             if (end < ans.length()) {

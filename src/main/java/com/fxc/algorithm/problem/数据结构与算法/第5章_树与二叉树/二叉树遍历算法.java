@@ -2,7 +2,6 @@ package com.fxc.algorithm.problem.数据结构与算法.第5章_树与二叉树;
 
 import com.fxc.algorithm.problem.util.TreeNode;
 
-import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -26,10 +25,10 @@ public class 二叉树遍历算法 {
 
         while (!stack.isEmpty()) {
             TreeNode tmp = stack.pop();
-            System.out.println(tmp.val);
+            printNode(tmp);
             while (tmp != null) {
                 if (tmp.left != null) {
-                    System.out.println(tmp.left.val);
+                    printNode(tmp.left);
                 }
                 if (tmp.right != null) {
                     stack.push(tmp.right);
@@ -37,6 +36,16 @@ public class 二叉树遍历算法 {
                 tmp = tmp.left;
             }
         }
+    }
+
+
+    /**
+     * 打印当前节点的值
+     *
+     * @param root 当前节点
+     */
+    private void printNode(TreeNode root) {
+        System.out.println(root.val);
     }
 
 }

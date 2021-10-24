@@ -17,27 +17,35 @@ public class Leetcode_051_N皇后 {
 
     public List<List<String>> solveNQueens(int n) {
         this.res = new ArrayList<>();
-        int[] quuens = new int[n];  //  存放第i行放置Q的位置
-        Arrays.fill(quuens, -1);
+        //  存放第i行放置Q的位置
+        int[] queues = new int[n];
+        Arrays.fill(queues, -1);
         Set<Integer> cols = new HashSet<>();
         Set<Integer> diag1 = new HashSet<>();
         Set<Integer> diag2 = new HashSet<>();
-        backTrace(quuens, 0, n, cols, diag1, diag2);
+        backTrace(queues, 0, n, cols, diag1, diag2);
         return res;
     }
 
-    private void backTrace(int[] quuens, int n, int row, Set<Integer> cols, Set<Integer> diag1, Set<Integer> diag2) {
+    private void backTrace(int[] quuens, int n, int row, Set<Integer> cols, Set<Integer> diag1,
+                           Set<Integer> diag2) {
         if (n == row) {
             List<String> grid = generateGrid(quuens);
             res.add(grid);
             return;
         }
         for (int i = 0; i < n; i++) {
-            if (cols.contains(i)) continue;
+            if (cols.contains(i)) {
+                continue;
+            }
             int d1 = row - i;
-            if (diag1.contains(d1)) continue;
+            if (diag1.contains(d1)) {
+                continue;
+            }
             int d2 = row + i;
-            if (diag2.contains(d2)) continue;
+            if (diag2.contains(d2)) {
+                continue;
+            }
             //  运行到这里说明当前位置:(n行i列) 可以放置Q
             cols.add(i);
             diag1.add(d1);

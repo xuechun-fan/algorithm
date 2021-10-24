@@ -20,7 +20,8 @@ class Singleton {
     }
 
     public static Singleton getInstance() {
-        if (instance == null) { //  在多线程环境中，如果有多个线程同时访问到这里，那么就会创建出多个实例
+        //  在多线程环境中，如果有多个线程同时访问到这里，那么就会创建出多个实例
+        if (instance == null) {
             return new Singleton();
         }
         return instance;
@@ -39,7 +40,7 @@ class Singleton01 {
     public static Singleton01 getInstance() {
         //  双重检测方法
         if (instance == null) {
-            synchronized (Singleton01.class) {   //
+            synchronized (Singleton01.class) {
                 if (instance == null) {
                     instance = new Singleton01();
                 }
@@ -55,16 +56,24 @@ class Singleton01 {
  * 这样就保证了安全性。
  */
 class Singleton01_1 {
-    private volatile static Singleton01_1 instance;
+
+    //    private volatile static Singleton01_1 instance;
+    /**
+     * 如果我们不使用volatile关键字来从虚拟机执行机制的层面来保证指令不被重排序，
+     * 我们依旧可以使用临时变量的方法来强行增加依赖关系以达到不被重排序的目的
+     */
+    private static Singleton01_1 instance;
 
     private Singleton01_1() {
+        System.out.println(Thread.currentThread().getName() + "\t单例构造方法");
     }
 
     public static Singleton01_1 getInstance() {
         if (instance == null) {
             synchronized (Singleton01_1.class) {
                 if (instance == null) {
-                    instance = new Singleton01_1();
+                    Singleton01_1 tmp = new Singleton01_1();
+                    instance = tmp;
                 }
             }
         }

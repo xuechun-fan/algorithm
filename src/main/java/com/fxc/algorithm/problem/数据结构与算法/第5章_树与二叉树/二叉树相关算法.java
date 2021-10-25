@@ -1,10 +1,9 @@
 package com.fxc.algorithm.problem.数据结构与算法.第5章_树与二叉树;
 
 import com.fxc.algorithm.problem.util.TreeNode;
+import org.springframework.boot.autoconfigure.web.servlet.JspTemplateAvailabilityProvider;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * 二叉树遍历算法
@@ -16,13 +15,14 @@ import java.util.Stack;
  * 6、通过层序遍历来完成统计二叉树节点个数
  * 7、求二叉树的最大深度
  * 8、判断两棵二叉树是否相等
+ * 9、求二叉树根节点到目标节点的路径
  *
  * @author FXC
  */
-public class 二叉树遍历算法 {
+public class 二叉树相关算法 {
 
     public static void main(String[] args) {
-        二叉树遍历算法 tool = new 二叉树遍历算法();
+        二叉树相关算法 tool = new 二叉树相关算法();
         TreeNode root = new TreeNode(1, new TreeNode(2, null, 3), new TreeNode(4, 5, 6));
         System.out.println("**************** preorder ****************");
         tool.preorder(root);
@@ -40,6 +40,15 @@ public class 二叉树遍历算法 {
         System.out.println("二叉树最大深度为: " + tool.isSame(root, root));
         System.out.println("**************** isSame -- excepted: false ****************");
         System.out.println("二叉树最大深度为: " + tool.isSame(root, new TreeNode(1, root, null)));
+        System.out.println("**************** findPath -- excepted: 1 4 5 ****************");
+        List<TreeNode> path = tool.findPath(root, root.right.left);
+        System.out.println("路径为: ");
+        for (TreeNode node : path) {
+            System.out.print(node.val + "\t");
+        }
+        System.out.println();
+        System.out.println("**************** countLeaf -- excepted: 3 ****************");
+        System.out.println("二叉树叶节点个数为：" + tool.countLeaf(root));
     }
 
     /**
@@ -229,6 +238,53 @@ public class 二叉树遍历算法 {
             return false;
         }
         return isSame(r1.left, r2.left) && isSame(r1.right, r2.right);
+    }
+
+    public Stack<TreeNode> path = new Stack<>();
+    /**
+     * 求二叉树根节点到目标节点的路径
+     * @param root 根节点
+     * @param target 目标节点
+     * @return 路径
+     */
+    public List<TreeNode> findPath(TreeNode root, TreeNode target) {
+        inorderRecur(root, target);
+        return path;
+    }
+
+    private void inorderRecur(TreeNode root, TreeNode target) {
+        if (root == null || (!path.isEmpty() && path.peek().equals(target))) {
+            return;
+        }
+        path.add(root);
+        if (path.peek().equals(target)) {
+            return;
+        }
+        inorderRecur(root.left, target);
+        if (path.peek().equals(target)) {
+            return;
+        }
+        inorderRecur(root.right, target);
+        if (path.peek().equals(target)) {
+            return;
+        }
+        path.pop();
+    }
+
+    /**
+     * 统计二叉树所有叶子节点数目
+     *
+     * @param root 根节点
+     * @return 二叉树所有叶子节点数目
+     */
+    public int countLeaf(TreeNode root) {
+       if (root == null) {
+           return 0;
+       }
+       if (root.left == null && root.right == null) {
+           return 1;
+       }
+       return countLeaf(root.left) + countLeaf(root.right);
     }
 
     /**

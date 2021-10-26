@@ -39,17 +39,18 @@ public interface IGraph {
      * 获取vex顶点在图中的位置
      *
      * @param vex 要被查找的顶点
-     * @return vex在图中的位置; -1: 图中不存在vex;
+     * @return vex在图中的位置; 图中不存在vex: -1;
      */
     int locateVex(Object vex);
 
     /**
-     * 返回v的第一个邻接点的位置
+     * 返回第v个顶点的第一个邻接点的位置
      *
      * @param v 当前顶点的位置
      * @return v的第一个邻接点的位置; -1: v没有邻接点;
+     * @throws Exception 若v范围非法则抛出异常
      */
-    int firstAdjVex(int v);
+    int firstAdjVex(int v) throws Exception;
 
     /**
      * 返回v相对于w的下一个邻接点的位置，若w是v的最后一个邻接点，则返回-1
@@ -58,5 +59,5 @@ public interface IGraph {
      * @param w w
      * @return -1: w是v的最后一个邻接点; v相对于w的下一个邻接点位置
      */
-    int nextAdjVex(int v, int w);
+    int nextAdjVex(int v, int w) throws Exception;
 }

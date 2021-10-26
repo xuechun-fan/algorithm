@@ -3,14 +3,12 @@ package com.fxc.algorithm.problem.数据结构与算法.第6章_图;
 import java.util.Scanner;
 
 /**
- * 图的邻接矩阵类
+ * 图的邻接表类
  *
  * @author FXC
  */
-public class MyGraph implements IGraph {
+public class ALGraph implements IGraph {
 
-    /** 表示无穷大，两点之间没有边 */
-    public static final int INFINITY = Integer.MAX_VALUE;
     /** 图的类型 */
     private GraphEnum type;
     /** 图的顶点数量 */
@@ -18,30 +16,41 @@ public class MyGraph implements IGraph {
     /** 图中边的数量 */
     private int arcNum;
     /** 图中的顶点 */
-    private Object[] vexes;
-    /** 图的邻接矩阵 */
-    private int[][] arcs;
+    private VNode[] vexes;
 
-    public MyGraph(GraphEnum type, int vexNum, int arcNum, Object[] vexes, int[][] arcs) {
+    public ALGraph() {
+        this(null, 0, 0, null);
+    }
+
+    public ALGraph(GraphEnum type) {
+        this(type, 0, 0, null);
+    }
+
+    public ALGraph(GraphEnum type, int vexNum) {
+        this(type, vexNum, 0, null);
+    }
+
+    public ALGraph(GraphEnum type, int vexNum, int arcNum) {
+        this(type, vexNum, arcNum, null);
+    }
+
+    public ALGraph(GraphEnum type, int vexNum, int arcNum, VNode[] vexes) {
         this.type = type;
         this.vexNum = vexNum;
         this.arcNum = arcNum;
         this.vexes = vexes;
-        this.arcs = arcs;
     }
 
-    /*public static void main(String[] args) {
-        System.out.println(GraphEnum.valueOf("UnDirectedGraph"));
-        GraphEnum[] values = GraphEnum.values();
-        for (GraphEnum graphEnum : values) {
-            System.out.println(graphEnum);
-        }
-    }*/
+    public static void main(String[] args) {
+        ALGraph tool = new ALGraph();
+        tool.createGraph();
+    }
 
     @Override
     public void createGraph() {
-
-        System.out.println("please input the kind of graph. (such as DG/UDG/DN/UDN)");
+        System.out.println(
+                "请输入要创建图的类型. \n(例: \n\tDG = 有向图\n" + "\tUDG = 无向图\n" + "\tDN = 有向网\n" + "\tUDN = "
+                        + "无向网)\n");
         Scanner sc = new Scanner(System.in);
         String input;
         while (true) {
@@ -70,28 +79,43 @@ public class MyGraph implements IGraph {
         }
     }
 
+    /**
+     * 在v顶点和u顶点之间添加边, 边的方向从v指向u
+     * (采用头插法)
+     *
+     * @param v     v顶点下标
+     * @param u     u顶点下标
+     * @param value 边的权值
+     */
+    public void addArc(int v, int u, int value) {
+        // 头插法
+        ArcNode newNode = new ArcNode(u, value);
+        newNode.setNextArc(vexes[v].getFirstArc());
+        vexes[v].setFirstArc(newNode);
+    }
+
     @Override
     public int getVexNum() {
-        return vexNum;
+        return this.vexNum;
     }
 
     @Override
     public int getArcNum() {
-        return arcNum;
+        return this.arcNum;
     }
 
     @Override
     public Object getVex(int v) throws Exception {
-        if (v < 0 || v > vexNum) {
+        if (v < 0 || v >= vexNum) {
             throw new Exception("第" + v + "个顶点不存在!");
         }
-        return vexes[v];
+        return vexes[v].getData();
     }
 
     @Override
     public int locateVex(Object vex) {
         for (int v = 0; v < vexNum; v++) {
-            if (vexes[v].equals(vex)) {
+            if (vexes[v].getData().equals(vex)) {
                 return v;
             }
         }
@@ -103,12 +127,11 @@ public class MyGraph implements IGraph {
         if (v < 0 || v >= vexNum) {
             throw new Exception("第" + v + "个顶点不存在");
         }
-        for (int i = 0; i < vexNum; i++) {
-            if (arcs[v][i] != 0 && arcs[v][i] < INFINITY) {
-                return i;
-            }
+        VNode vex = vexes[v];
+        if (vex.getFirstArc() != null) {
+            return vex.getFirstArc().getAdjVex();
         }
-        return 0;
+        return -1;
     }
 
     @Override
@@ -116,24 +139,26 @@ public class MyGraph implements IGraph {
         if (v < 0 || v >= vexNum) {
             throw new Exception("第" + v + "个顶点不存在");
         }
-        for (int i = w + 1; i < vexNum; i++) {
-            if (arcs[v][i] != 0 && arcs[v][i] < INFINITY) {
-                return i;
+        VNode vex = vexes[v];
+        ArcNode arcVW = null;
+        for (ArcNode arc = vex.getFirstArc(); arc != null; arc = arc.getNextArc()) {
+            if (arc.getAdjVex() == w) {
+                arcVW = arc;
+                break;
             }
         }
-        return 0;
+        if (arcVW != null && arcVW.getNextArc() != null) {
+            return arcVW.getNextArc().getAdjVex();
+        }
+        return -1;
     }
 
     public GraphEnum getType() {
-        return this.type;
+        return type;
     }
 
-    public Object[] getVexes() {
-        return this.vexes;
-    }
-
-    public int[][] getArcs() {
-        return this.arcs;
+    public VNode[] getVexes() {
+        return vexes;
     }
 
     /**
@@ -174,26 +199,17 @@ public class MyGraph implements IGraph {
         System.out.println("请分别输入图的定点数、图的边数:");
         // 初始化图类数据
         this.type = type;
-        vexNum = sc.nextInt();
-        arcNum = sc.nextInt();
-        vexes = new Object[vexNum];
-        arcs = new int[vexNum][vexNum];
+        this.vexNum = sc.nextInt();
+        this.arcNum = sc.nextInt();
+        this.vexes = new VNode[vexNum];
         System.out.println("请分别输入图的各个顶点:");
         // 构造顶点向量
         for (int i = 0; i < vexNum; i++) {
-            vexes[i] = sc.nextInt();
+            vexes[i] = new VNode(sc.nextInt());
         }
         // 标志是图还是网 true:网; 图:false;
         boolean isNetwork = type.equals(GraphEnum.DirectedNetwork) || type.equals(
                 GraphEnum.UnDirectedNetwork);
-        // 初始化邻接矩阵的值 网:INFINITY; 图:0;
-        int initialValue = isNetwork ? INFINITY : 0;
-        // 初始化邻接矩阵
-        for (int i = 0; i < vexNum; i++) {
-            for (int j = 0; j < vexNum; j++) {
-                arcs[i][j] = initialValue;
-            }
-        }
         // 标志当前类型是否为有向 true:有向; false:无向;
         boolean isDirected = type.equals(GraphEnum.DirectedGraph) || type.equals(
                 GraphEnum.DirectedNetwork);
@@ -203,30 +219,27 @@ public class MyGraph implements IGraph {
             for (int k = 0; k < arcNum; k++) {
                 int v = locateVex(sc.next());
                 int u = locateVex(sc.next());
-                if (isDirected) {
-                    // 有向
-                    arcs[v][u] = sc.nextInt();
-                } else {
+                int value = sc.nextInt();
+                addArc(v, u, value);
+                if (!isDirected) {
                     // 无向
-                    arcs[v][u] = arcs[u][v] = sc.nextInt();
+                    addArc(u, v, value);
                 }
             }
-
         } else {
             // 创建的是图
             System.out.println("请输入各个边的两个顶点:");
             for (int k = 0; k < arcNum; k++) {
                 int v = locateVex(sc.next());
                 int u = locateVex(sc.next());
-                if (isDirected) {
-                    // 有向
-                    arcs[v][u] = 1;
-                } else {
+                addArc(v, u, 1);
+                if (!isDirected) {
                     // 无向
-                    arcs[v][u] = arcs[u][v] = 1;
+                    addArc(u, v, 1);
                 }
             }
         }
-    }
 
+        System.out.println("图数据结构创建完毕...");
+    }
 }

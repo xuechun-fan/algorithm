@@ -8,10 +8,27 @@ import java.util.Queue;
  *
  * @author FXC
  */
-public class 利用广度优先遍历确定无向图的连通分量 {
+public class 图相关算法应用 {
 
     /** 表示无穷大，两点之间没有边 */
     public static final int INFINITY = Integer.MAX_VALUE;
+
+    public static void main(String[] args) throws Exception {
+        图相关算法应用 tool = new 图相关算法应用();
+        // test1 邻接矩阵形式的图，测试求非连通图中的连通分量
+        Object[] vexes = {"A", "B", "C", "D", "E", "F", "G"};
+        int[][] arcs = {
+                {0, 1, INFINITY, 1, INFINITY, INFINITY, INFINITY},
+                {1, 0, 1, INFINITY, INFINITY, INFINITY, INFINITY},
+                {INFINITY, 1, 0, 1, INFINITY, INFINITY, INFINITY},
+                {1, INFINITY, 1, 0, INFINITY, INFINITY, INFINITY},
+                {INFINITY, INFINITY, INFINITY, INFINITY, 0, 1, INFINITY},
+                {INFINITY, INFINITY, INFINITY, INFINITY, 1, 0, 1},
+                {INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 1, 0}
+        };
+        MatrixGraph graph = new MatrixGraph(GraphEnum.UnDirectedGraph, 7, 6, vexes, arcs);
+        tool.CC_BFS(graph);
+    }
 
     /**
      * 利用广度优先遍历确定无向图的连通分量
@@ -19,7 +36,7 @@ public class 利用广度优先遍历确定无向图的连通分量 {
      * @param graph
      * @throws Exception
      */
-    public static void CC_BFS(IGraph graph) throws Exception {
+    public void CC_BFS(IGraph graph) throws Exception {
         int vexNum = graph.getVexNum();
         boolean[] visited = new boolean[vexNum];
         // 辅助队列，用来实现BFS
@@ -53,19 +70,24 @@ public class 利用广度优先遍历确定无向图的连通分量 {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        Object[] vexes = {"A", "B", "C", "D", "E", "F", "G"};
-        int[][] arcs = {
-                {0, 1, INFINITY, 1, INFINITY, INFINITY, INFINITY},
-                {1, 0, 1, INFINITY, INFINITY, INFINITY, INFINITY},
-                {INFINITY, 1, 0, 1, INFINITY, INFINITY, INFINITY},
-                {1, INFINITY, 1, 0, INFINITY, INFINITY, INFINITY},
-                {INFINITY, INFINITY, INFINITY, INFINITY, 0, 1, INFINITY},
-                {INFINITY, INFINITY, INFINITY, INFINITY, 1, 0, 1},
-                {INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 1, 0}
-        };
-        MatrixGraph graph = new MatrixGraph(GraphEnum.UnDirectedGraph, 7, 6, vexes, arcs);
-        CC_BFS(graph);
+    /** 访问标志数组 */
+    private boolean[] visited;
+    /** 辅助变量，在遍历过程中用于记录从起点出发的路径长度 */
+    private int len = 0;
+    /** 标识是否已经找到了指定长度的路径 */
+    private boolean find = false;
+
+    /**
+     * 判断有向图中的u、v两顶点之间是否存在长度为len的路径
+     * @param graph 有向图
+     * @param u u顶点下标
+     * @param v v顶点下标
+     * @param len 目标长度
+     * @throws Exception 抛出异常
+     */
+    public void findPath(IGraph graph, int u, int v, int len) throws Exception {
+
+
     }
 
 }

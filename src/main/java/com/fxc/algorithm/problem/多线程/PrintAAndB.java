@@ -4,12 +4,9 @@ package com.fxc.algorithm.problem.多线程;
  * 两个线程交替打印1-20的奇数和偶数
  *
  * @author chun
- * @date 2021/9/3 1:42
  */
 public class PrintAAndB {
 
-    /** 标志位 */
-    private boolean flag = true;
     /** 数值 */
     private int i = 1;
 

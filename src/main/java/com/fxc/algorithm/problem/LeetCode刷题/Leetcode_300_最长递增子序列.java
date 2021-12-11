@@ -34,7 +34,7 @@ public class Leetcode_300_最长递增子序列 {
     }
 
     public static void main(String[] args) {
-        int[] arr = new int[]{3, 5, 6, 2, 5, 4, 19, 5, 6, 7, 12};
+        int[] arr = new int[]{2, 3, 1, 6, 5, 4};
         int res = lengthOfLIS(arr);
         System.out.println(res);
     }
